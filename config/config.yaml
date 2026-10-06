@@ -1,0 +1,25 @@
+# Runtime parameters — loaded by AgentRegistry, passed as Graph(config=...).
+# Separate from config/agent.yaml (the static manifest).
+
+max_retry: 3
+timeout_s: 30
+
+llm:
+  system_prompt_template: "prompts/gov_qa.j2"
+  # Regulatory guidance requires deterministic, fully grounded generation —
+  # temperature pinned to 0.0.
+  temperature: 0.0
+  max_tokens: 3000
+
+retrieval:
+  vector_store:
+    collection: "gov_policy_and_regulation_kb"
+  top_k: 5
+  # Raised grounding bar for regulatory guidance; only high-confidence policy
+  # passages may ground an answer (the rerank node additionally floors any
+  # configured value at 0.75).
+  score_threshold: 0.78
+  hybrid_search: false
+
+security:
+  s3_gate_enabled: true
